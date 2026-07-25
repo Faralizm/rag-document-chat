@@ -1,5 +1,5 @@
 langchain
 langchain-community
-langchain-text-splitters
 pypdf
 python-dotenv
+sentence-transformers
