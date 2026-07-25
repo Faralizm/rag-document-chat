@@ -1,6 +1,12 @@
-# Checkpoint 1 — Document Ingestion + Chunking
+# RAG Document Chat — Checkpoints 1–3
 
-A simple pipeline that loads a PDF document and splits it into logically sized chunks.
+A pipeline that loads a PDF document, splits it into chunks, generates embeddings, and stores them in a FAISS vector index for similarity search.
+
+## Project structure
+
+- `ingest.py` — Checkpoint 1: document ingestion + chunking
+- `embed.py` — Checkpoint 2: embedding generation (reuses ingest.py)
+- `vectorstore.py` — Checkpoint 3: FAISS vector storage + similarity search (reuses ingest.py and embed.py)
 
 ## How to run it
 
@@ -15,7 +21,7 @@ A simple pipeline that loads a PDF document and splits it into logically sized c
    pip install -r requirements.txt
 ```
 
-3. Copy `.env.example` to `.env` and add your own API key:
+3. Copy `.env.example` to `.env` and add your own API key (not required for the current checkpoints, but set up for future use):
 ```bash
    cp .env.example .env
 ```
@@ -23,9 +29,11 @@ A simple pipeline that loads a PDF document and splits it into logically sized c
 
 4. Place a test PDF named `sample.pdf` in the project folder (you can use any PDF you like).
 
-5. Run the script:
+5. Run each stage:
 ```bash
-   python ingest.py
+   python ingest.py         # ingestion + chunking
+   python embed.py          # embedding generation
+   python vectorstore.py    # vector storage + similarity search
 ```
 
 ## How it works
@@ -35,6 +43,8 @@ A simple pipeline that loads a PDF document and splits it into logically sized c
    - `chunk_size=1000` — gives enough context per chunk without exceeding token limits
    - `chunk_overlap=200` — ensures key information at chunk boundaries isn't lost
    - `separators=["\n\n", "\n", " ", ""]` — splits by paragraph first, then sentence, to avoid cutting words in half
+3. **Embedding generation**: `sentence-transformers` with the local `all-MiniLM-L6-v2` model converts each chunk into a 384-dimensional vector. No API key or cost required.
+4. **Vector storage + similarity search**: `FAISS` (`IndexFlatL2`) stores all chunk embeddings and performs exact L2-distance search to retrieve the most relevant chunks for a given query.
 
 ## Security
 
