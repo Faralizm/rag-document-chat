@@ -3,3 +3,4 @@ langchain-community
 pypdf
 python-dotenv
 sentence-transformers
+faiss-cpu
